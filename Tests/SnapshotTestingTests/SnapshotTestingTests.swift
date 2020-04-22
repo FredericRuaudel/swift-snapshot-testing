@@ -691,6 +691,25 @@ final class SnapshotTestingTests: XCTestCase {
     }
     #endif
   }
+    
+  func testForcedScaleTraitsWithView() {
+    #if os(iOS)
+    if #available(iOS 11.0, *) {
+      let label = UILabel()
+      label.font = .preferredFont(forTextStyle: .title1)
+      label.adjustsFontForContentSizeCategory = true
+      label.text = "What's the point?"
+
+        ["default": 0.0, "1x": 1.0, "2x": 2.0, "3x": 3.0].forEach { name, scale in
+        assertSnapshot(
+          matching: label,
+          as: .image(traits: .init(displayScale: scale)),
+          named: "label-\(name)"
+        )
+      }
+    }
+    #endif
+  }
 
   func testUIView() {
     #if os(iOS)
