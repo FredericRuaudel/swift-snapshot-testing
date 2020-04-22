@@ -14,7 +14,7 @@ extension Diffing where Value == UIImage {
   public static func image(precision: Float, scale: CGFloat) -> Diffing {
     return Diffing(
       toData: { $0.pngData()! },
-      fromData: { UIImage(data: $0, scale: UIScreen.main.scale)! }
+      fromData: { UIImage(data: $0, scale: scale)! }
     ) { old, new in
       guard !compare(old, new, precision: precision) else { return nil }
       let difference = SnapshotTesting.diff(old, new)
