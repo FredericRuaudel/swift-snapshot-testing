@@ -4,13 +4,14 @@ import XCTest
 
 extension Diffing where Value == UIImage {
   /// A pixel-diffing strategy for UIImage's which requires a 100% match.
-  public static let image = Diffing.image(precision: 1)
+  public static let image = Diffing.image(precision: 1, scale: UIScreen.main.scale)
 
   /// A pixel-diffing strategy for UIImage that allows customizing how precise the matching must be.
   ///
   /// - Parameter precision: A value between 0 and 1, where 1 means the images must match 100% of their pixels.
+  /// - Parameter scale: the scale to use for the reference image
   /// - Returns: A new diffing strategy.
-  public static func image(precision: Float) -> Diffing {
+  public static func image(precision: Float, scale: CGFloat) -> Diffing {
     return Diffing(
       toData: { $0.pngData()! },
       fromData: { UIImage(data: $0, scale: UIScreen.main.scale)! }
@@ -37,16 +38,16 @@ extension Diffing where Value == UIImage {
 extension Snapshotting where Value == UIImage, Format == UIImage {
   /// A snapshot strategy for comparing images based on pixel equality.
   public static var image: Snapshotting {
-    return .image(precision: 1)
+    return .image(precision: 1, scale: UIScreen.main.scale)
   }
 
   /// A snapshot strategy for comparing images based on pixel equality.
   ///
   /// - Parameter precision: The percentage of pixels that must match.
-  public static func image(precision: Float) -> Snapshotting {
+  public static func image(precision: Float = 1, scale: CGFloat = UIScreen.main.scale) -> Snapshotting {
     return .init(
       pathExtension: "png",
-      diffing: .image(precision: precision)
+      diffing: .image(precision: precision, scale: scale)
     )
   }
 }
